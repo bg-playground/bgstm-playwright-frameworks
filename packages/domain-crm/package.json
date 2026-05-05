@@ -7,7 +7,7 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "playwright test",
+    "test": "echo \"(no tests yet — see examples/crm-example for runnable Playwright tests)\"",
     "test:e2e": "playwright test --project=e2e",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
