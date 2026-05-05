@@ -1,6 +1,7 @@
 {
   "name": "@bgstm/domain-crm",
   "version": "0.0.0",
+  "private": true,
   "description": "CRM domain pack for Playwright — Leads, Opportunities, Accounts, Contacts",
   "license": "Apache-2.0",
   "main": "./dist/index.js",

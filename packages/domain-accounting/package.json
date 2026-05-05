@@ -1,6 +1,7 @@
 {
   "name": "@bgstm/domain-accounting",
   "version": "0.0.0",
+  "private": true,
   "description": "Accounting domain pack for Playwright — Ledgers, Journals, Reconciliations",
   "license": "Apache-2.0",
   "main": "./dist/index.js",

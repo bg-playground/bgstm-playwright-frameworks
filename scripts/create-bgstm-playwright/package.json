@@ -1,6 +1,7 @@
 {
   "name": "create-bgstm-playwright",
   "version": "0.0.0",
+  "private": true,
   "description": "Scaffolder for new bgstm-playwright projects — `npm create bgstm-playwright`",
   "license": "Apache-2.0",
   "bin": {
