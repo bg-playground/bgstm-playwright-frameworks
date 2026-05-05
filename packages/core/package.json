@@ -1,0 +1,27 @@
+{
+  "name": "@bgstm/playwright-core",
+  "version": "0.0.0",
+  "description": "Shared fixtures, base POM, and BGSTM reporter for Playwright",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./reporter": "./dist/reporter/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "playwright test",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.48.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "@bgstm/domain-crm",
+  "version": "0.0.0",
+  "description": "CRM domain pack for Playwright — Leads, Opportunities, Accounts, Contacts",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "playwright test",
+    "test:e2e": "playwright test --project=e2e",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bgstm/playwright-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.48.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  }
+}
