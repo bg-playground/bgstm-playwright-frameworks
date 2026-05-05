@@ -1,4 +1,4 @@
-import { test as base } from '@bgstm/playwright-core';
+import { base } from '@bgstm/playwright-core';
 import { LedgerPage } from '../pages/ledger.page.js';
 import { JournalPage } from '../pages/journal.page.js';
 import { ReconciliationPage } from '../pages/reconciliation.page.js';

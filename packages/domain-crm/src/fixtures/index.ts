@@ -1,4 +1,4 @@
-import { test as base } from '@bgstm/playwright-core';
+import { base } from '@bgstm/playwright-core';
 import { LeadPage } from '../pages/lead.page.js';
 import { OpportunityPage } from '../pages/opportunity.page.js';
 import { AccountPage } from '../pages/account.page.js';
