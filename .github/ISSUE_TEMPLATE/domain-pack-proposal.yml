@@ -1,0 +1,60 @@
+name: Domain Pack Proposal
+description: Propose a new domain pack for bgstm-playwright-frameworks
+labels: ["enhancement", "domain-pack"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for proposing a new domain pack! Please describe the domain and what you'd like to see.
+        Before starting implementation, open this issue so the community can provide feedback.
+  - type: input
+    id: domain-name
+    attributes:
+      label: Domain name
+      description: Short name for the domain (e.g. "E-commerce", "HR", "Healthcare")
+      placeholder: "E-commerce"
+    validations:
+      required: true
+  - type: input
+    id: package-name
+    attributes:
+      label: Proposed package name
+      description: npm package name
+      placeholder: "@bgstm/domain-ecommerce"
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Domain description
+      description: What business domain does this pack cover? Who would use it?
+    validations:
+      required: true
+  - type: textarea
+    id: entities
+    attributes:
+      label: Key entities
+      description: List the main page objects / entities you plan to implement.
+      placeholder: |
+        - ProductPage
+        - CartPage
+        - CheckoutPage
+        - OrdersPage
+    validations:
+      required: true
+  - type: textarea
+    id: target-apps
+    attributes:
+      label: Target applications
+      description: What open-source or demo applications would the exemplar tests run against?
+      placeholder: "e.g. Magento demo, Shopify dev store, SauceDemo"
+    validations:
+      required: true
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Implementation checklist
+      options:
+        - label: I plan to implement this myself
+        - label: I would like help from the community
+        - label: This is a request for someone else to implement
