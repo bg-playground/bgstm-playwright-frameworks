@@ -3,7 +3,9 @@ name: Release
 on:
   push:
     branches: [main]
-
+    paths:
+      - '.changeset/**'         # only run when a changeset is added/modified
+      - '.github/workflows/release.yml'
 concurrency:
   group: release
   cancel-in-progress: false
