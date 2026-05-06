@@ -1,7 +1,7 @@
 {
   "name": "accounting-example",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Standalone runnable Playwright project using @bgstm/domain-accounting",
   "scripts": {
     "test": "playwright test"
