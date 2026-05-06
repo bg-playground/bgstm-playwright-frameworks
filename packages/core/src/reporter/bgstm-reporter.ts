@@ -55,9 +55,7 @@ export default class BGSTMReporter implements Reporter {
     }
 
     if (this.apiToken && !this.apiToken.startsWith(RUNNER_TOKEN_PREFIX)) {
-      this.logger.warn(
-        `[BGSTMReporter] API token does not start with ${RUNNER_TOKEN_PREFIX}. Continuing anyway.`,
-      );
+      this.logger.warn('[BGSTMReporter] API token format appears invalid. Continuing anyway.');
     }
 
     this.client = new BGSTMClient({
