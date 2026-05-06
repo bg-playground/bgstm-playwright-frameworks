@@ -16,7 +16,9 @@ export interface BGSTMReporterOptions {
   apiUrl?: string;
   apiToken?: string;
   projectId?: string;
+  /** Falls back to GITHUB_SHA when omitted. */
   gitSha?: string;
+  /** Falls back to GITHUB_REF_NAME when omitted. */
   gitBranch?: string;
   tolerateOffline?: boolean;
 }
