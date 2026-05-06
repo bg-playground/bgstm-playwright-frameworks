@@ -5,7 +5,16 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: process.env.CI ? 'github' : 'list',
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['@bgstm/playwright-core/reporter', {
+      apiUrl: process.env.BGSTM_API_URL,
+      apiToken: process.env.BGSTM_API_TOKEN,
+      projectId: process.env.BGSTM_PROJECT_ID,
+      tolerateOffline: true,
+    }],
+  ],
   use: {
     baseURL: process.env.ACCOUNTING_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',

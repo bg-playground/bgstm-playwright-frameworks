@@ -8,12 +8,18 @@
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": "./dist/index.js",
-    "./reporter": "./dist/reporter/index.js"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./reporter": {
+      "types": "./dist/reporter/index.d.ts",
+      "default": "./dist/reporter/index.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "echo '(no tests yet)'",
+    "test": "vitest run",
     "lint": "eslint src --ext .ts",
     "typecheck": "tsc --noEmit"
   },
@@ -23,6 +29,7 @@
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "@types/node": "^20.0.0",
-    "typescript": "^5.5.0"
+    "typescript": "^5.5.0",
+    "vitest": "^3.2.4"
   }
 }

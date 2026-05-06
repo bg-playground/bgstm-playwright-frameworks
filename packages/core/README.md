@@ -17,12 +17,26 @@ pnpm add -D @bgstm/playwright-core
 ```ts
 // playwright.config.ts
 import { defineConfig } from '@playwright/test';
-import { bgstmReporter } from '@bgstm/playwright-core/reporter';
 
 export default defineConfig({
-  reporter: [bgstmReporter({ baseUrl: process.env.BGSTM_URL, token: process.env.BGSTM_TOKEN })],
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['@bgstm/playwright-core/reporter', {
+      apiUrl: process.env.BGSTM_API_URL,
+      apiToken: process.env.BGSTM_API_TOKEN,
+      projectId: process.env.BGSTM_PROJECT_ID,
+      tolerateOffline: true,
+    }],
+  ],
 });
 ```
+
+Environment variables used by the reporter:
+
+- `BGSTM_API_URL`
+- `BGSTM_API_TOKEN`
+- `BGSTM_PROJECT_ID`
 
 ### Base Fixtures
 
