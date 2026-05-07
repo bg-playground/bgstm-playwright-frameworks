@@ -1,4 +1,5 @@
 // Apache-2.0
+// Invoked via `pnpm smoke` (not `pnpm test`) — see package.json.
 
 import { defineConfig, devices } from '@playwright/test';
 

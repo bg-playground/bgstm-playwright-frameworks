@@ -4,14 +4,13 @@
   "version": "0.0.0",
   "description": "Minimal Playwright smoke suite (1 pass / 1 fail / 1 skip) wired to BGSTMReporter",
   "scripts": {
-    "test": "playwright test"
+    "test": "echo \"(intentional smoke fixture — run via 'pnpm smoke' or step-2 CI; skipped from 'pnpm -r run test' on purpose)\"",
+    "smoke": "playwright test"
   },
   "dependencies": {
     "@bgstm/playwright-core": "workspace:*"
   },
   "devDependencies": {
-    "@playwright/test": "^1.48.0",
-    "@types/node": "^20.0.0",
-    "typescript": "^5.5.0"
+    "@playwright/test": "^1.48.0"
   }
 }

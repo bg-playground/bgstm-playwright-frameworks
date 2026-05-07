@@ -95,7 +95,7 @@ cd examples/crm-example
 BGSTM_API_URL=https://bgstm.example.com \
 BGSTM_API_TOKEN=bgstm_runner_… \
 BGSTM_PROJECT_ID=<uuid> \
-pnpm test
+pnpm smoke
 ```
 
 ## Development
