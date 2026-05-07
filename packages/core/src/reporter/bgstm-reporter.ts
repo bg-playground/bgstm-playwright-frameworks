@@ -1,6 +1,7 @@
 // Apache-2.0
 
 import { readFile } from 'node:fs/promises';
+import { basename } from 'node:path';
 
 import type {
   FullConfig,
@@ -197,9 +198,7 @@ export default class BGSTMReporter implements Reporter {
     }
 
     const kind = this.inferArtifactKind(attachment.name, attachment.contentType);
-    const filename = attachment.path
-      ? attachment.path.split('/').pop() ?? attachment.name
-      : attachment.name;
+    const filename = attachment.path ? basename(attachment.path) : attachment.name;
 
     await this.client!.uploadArtifact({
       caseResultId,
@@ -215,7 +214,7 @@ export default class BGSTMReporter implements Reporter {
     if (lower.includes('screenshot')) {
       return 'screenshot';
     }
-    if (lower.includes('trace') || (contentType === 'application/zip' && lower.startsWith('trace'))) {
+    if (lower.includes('trace') || contentType === 'application/zip') {
       return 'trace';
     }
     if (contentType.startsWith('video/')) {
