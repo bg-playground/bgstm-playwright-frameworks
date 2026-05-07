@@ -51,9 +51,6 @@ importers:
 
   examples/crm-example:
     dependencies:
-      '@bgstm/domain-crm':
-        specifier: workspace:*
-        version: link:../../packages/domain-crm
       '@bgstm/playwright-core':
         specifier: workspace:*
         version: link:../../packages/core
@@ -61,12 +58,6 @@ importers:
       '@playwright/test':
         specifier: ^1.48.0
         version: 1.59.1
-      '@types/node':
-        specifier: ^20.0.0
-        version: 20.19.39
-      typescript:
-        specifier: ^5.5.0
-        version: 5.9.3
 
   packages/core:
     devDependencies:

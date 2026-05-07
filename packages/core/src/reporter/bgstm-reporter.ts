@@ -1,5 +1,8 @@
 // Apache-2.0
 
+import { readFile } from 'node:fs/promises';
+import { basename } from 'node:path';
+
 import type {
   FullConfig,
   FullResult,
@@ -10,7 +13,14 @@ import type {
 } from '@playwright/test/reporter';
 
 import { BGSTMClient } from './client.js';
-import type { RunStatus, SessionCreate, SessionFinish } from '../types/external-results.js';
+import type {
+  ArtifactKind,
+  CaseOutcome,
+  CaseResultCreate,
+  RunStatus,
+  SessionCreate,
+  SessionFinish,
+} from '../types/external-results.js';
 
 export interface BGSTMReporterOptions {
   apiUrl?: string;
@@ -24,6 +34,23 @@ export interface BGSTMReporterOptions {
 }
 
 const RUNNER_TOKEN_PREFIX = 'bgstm_runner_';
+
+/** Maximum artifact size accepted by BGSTM storage (50 MB). */
+const MAX_ARTIFACT_BYTES = 50 * 1024 * 1024;
+
+/**
+ * Content-types accepted by BGSTM's artifact storage.
+ * Matches the server-side allowlist — the server is authoritative; this is a courtesy filter.
+ */
+const ALLOWED_CONTENT_TYPES = new Set([
+  'image/png',
+  'image/jpeg',
+  'video/mp4',
+  'video/webm',
+  'application/zip',
+  'text/plain',
+  'application/json',
+]);
 
 type Logger = Pick<Console, 'warn'>;
 
@@ -88,9 +115,34 @@ export default class BGSTMReporter implements Reporter {
     });
   }
 
-  onTestEnd(_test: TestCase, _result: TestResult): void {
-    // TODO(bg-playground/bgstm-playwright-frameworks#3, BGSTM#303): implement per-case reporting.
-    // TODO(bg-playground/bgstm-playwright-frameworks#3, BGSTM#298): implement artifact upload reporting.
+  async onTestEnd(test: TestCase, result: TestResult): Promise<void> {
+    if (!this.client || !this.sessionId) {
+      return;
+    }
+
+    await this.runSafely(async () => {
+      const outcome = this.mapCaseOutcome(result);
+
+      const payload: CaseResultCreate = {
+        session_id: this.sessionId!,
+        external_id: test.titlePath().join(' > '),
+        title: test.title,
+        outcome,
+        duration_ms: result.duration,
+      };
+
+      if (outcome === 'failed') {
+        payload.error_message = result.error?.message?.slice(0, 2048);
+      }
+
+      const caseResult = await this.client!.createCaseResult(payload);
+
+      if (outcome === 'failed') {
+        for (const attachment of result.attachments) {
+          await this.uploadAttachment(caseResult.id, attachment);
+        }
+      }
+    });
   }
 
   async onEnd(result: FullResult): Promise<void> {
@@ -106,6 +158,69 @@ export default class BGSTMReporter implements Reporter {
     await this.runSafely(async () => {
       await this.client!.finishSession(this.sessionId!, payload);
     });
+  }
+
+  private mapCaseOutcome(result: TestResult): CaseOutcome {
+    switch (result.status) {
+      case 'passed':
+        return result.retry > 0 ? 'flaky' : 'passed';
+      case 'failed':
+      case 'timedOut':
+        return 'failed';
+      default:
+        return 'skipped';
+    }
+  }
+
+  private async uploadAttachment(
+    caseResultId: string,
+    attachment: TestResult['attachments'][number],
+  ): Promise<void> {
+    if (!ALLOWED_CONTENT_TYPES.has(attachment.contentType)) {
+      return;
+    }
+
+    let body: Buffer;
+
+    if (attachment.body) {
+      body = attachment.body;
+    } else if (attachment.path) {
+      body = await readFile(attachment.path);
+    } else {
+      return;
+    }
+
+    if (body.byteLength > MAX_ARTIFACT_BYTES) {
+      this.logger.warn(
+        `[BGSTMReporter] Skipping artifact "${attachment.name}" (${body.byteLength} bytes > ${MAX_ARTIFACT_BYTES} byte limit).`,
+      );
+      return;
+    }
+
+    const kind = this.inferArtifactKind(attachment.name, attachment.contentType);
+    const filename = attachment.path ? basename(attachment.path) : attachment.name;
+
+    await this.client!.uploadArtifact({
+      caseResultId,
+      kind,
+      filename,
+      contentType: attachment.contentType,
+      body,
+    });
+  }
+
+  private inferArtifactKind(name: string, contentType: string): ArtifactKind {
+    const lower = name.toLowerCase();
+    if (lower.includes('screenshot')) {
+      return 'screenshot';
+    }
+    if (lower.includes('trace') || contentType === 'application/zip') {
+      return 'trace';
+    }
+    if (contentType.startsWith('video/')) {
+      return 'video';
+    }
+    return 'other';
   }
 
   private mapRunStatus(status: FullResult['status']): Extract<RunStatus, 'passed' | 'failed' | 'aborted'> {
