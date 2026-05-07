@@ -2,13 +2,12 @@
   "name": "crm-example",
   "private": true,
   "version": "0.0.0",
-  "description": "Standalone runnable Playwright project using @bgstm/domain-crm",
+  "description": "Minimal Playwright smoke suite (1 pass / 1 fail / 1 skip) wired to BGSTMReporter",
   "scripts": {
     "test": "playwright test"
   },
   "dependencies": {
-    "@bgstm/playwright-core": "workspace:*",
-    "@bgstm/domain-crm": "workspace:*"
+    "@bgstm/playwright-core": "workspace:*"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",

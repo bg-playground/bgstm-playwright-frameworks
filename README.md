@@ -72,6 +72,32 @@ NAT              ← managed execution + AI-adaptive testing (commercial)
 
 Read more: [BGSTM integration design](./docs/bgstm-integration.md)
 
+## Example: crm-example
+
+The [`examples/crm-example`](./examples/crm-example) directory is a minimal Playwright project that exercises the full reporter pipeline against a live BGSTM instance.
+
+It contains exactly three tests (1 pass / 1 fail / 1 skip) — the failing test is **intentional** and is the artifact-upload smoke proof for the BGSTM step-2 CI job.
+
+### Required environment variables
+
+| Variable | Description |
+|---|---|
+| `BGSTM_API_URL` | Base URL of the BGSTM instance (e.g. `https://bgstm.example.com`) |
+| `BGSTM_API_TOKEN` | Runner token (format: `bgstm_runner_…`) |
+| `BGSTM_PROJECT_ID` | BGSTM project UUID to report results into |
+| `GITHUB_SHA` | Commit SHA under test (set automatically in GitHub Actions) |
+| `GITHUB_REF_NAME` | Branch name (set automatically in GitHub Actions) |
+
+When `BGSTM_API_URL` is unset the reporter is skipped and only the `list` reporter runs.
+
+```bash
+cd examples/crm-example
+BGSTM_API_URL=https://bgstm.example.com \
+BGSTM_API_TOKEN=bgstm_runner_… \
+BGSTM_PROJECT_ID=<uuid> \
+pnpm test
+```
+
 ## Development
 
 ```bash

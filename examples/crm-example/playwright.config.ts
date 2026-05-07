@@ -1,23 +1,25 @@
+// Apache-2.0
+
 import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './tests',
-  fullyParallel: true,
-  forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  reporter: [
-    ['list'],
-    ['html', { open: 'never' }],
-    ['@bgstm/playwright-core/reporter', {
-      apiUrl: process.env.BGSTM_API_URL,
-      apiToken: process.env.BGSTM_API_TOKEN,
-      projectId: process.env.BGSTM_PROJECT_ID,
-      tolerateOffline: true,
-    }],
-  ],
+  retries: 0,
+  reporter: process.env.BGSTM_API_URL
+    ? [
+        ['list'],
+        [
+          '@bgstm/playwright-core/reporter',
+          {
+            tolerateOffline: false,
+          },
+        ],
+      ]
+    : [['list']],
   use: {
-    baseURL: process.env.CRM_BASE_URL || 'http://localhost:3000',
     trace: 'on-first-retry',
+    screenshot: 'only-on-failure',
+    video: 'retain-on-failure',
   },
   projects: [
     {
