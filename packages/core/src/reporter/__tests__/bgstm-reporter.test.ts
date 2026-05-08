@@ -291,6 +291,91 @@ describe('BGSTMReporter', () => {
       });
     });
 
+    it('includes a single requirement annotation in the payload', async () => {
+      const reporter = await makeReporter();
+      fetchMock.mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const test = createTestCase(['Suite', 'test'], [
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-001' },
+      ]);
+
+      await reporter.onTestEnd(test, createTestResult());
+
+      const [, req] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(JSON.parse(req.body as string)).toMatchObject({
+        requirement_external_ids: ['REQ-LOGIN-001'],
+      });
+    });
+
+    it('preserves multiple requirement annotations in declaration order', async () => {
+      const reporter = await makeReporter();
+      fetchMock.mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const test = createTestCase(['Suite', 'test'], [
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-001' },
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-002' },
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-003' },
+      ]);
+
+      await reporter.onTestEnd(test, createTestResult());
+
+      const [, req] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(JSON.parse(req.body as string)).toMatchObject({
+        requirement_external_ids: ['REQ-LOGIN-001', 'REQ-LOGIN-002', 'REQ-LOGIN-003'],
+      });
+    });
+
+    it('omits requirement_external_ids when no requirement annotation is present', async () => {
+      const reporter = await makeReporter();
+      fetchMock.mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const test = createTestCase(['Suite', 'test'], [{ type: 'issue', description: 'JIRA-123' }]);
+
+      await reporter.onTestEnd(test, createTestResult());
+
+      const [, req] = fetchMock.mock.calls[0] as [string, RequestInit];
+      const payload = JSON.parse(req.body as string);
+      expect(payload).not.toHaveProperty('requirement_external_ids');
+    });
+
+    it('silently drops empty and whitespace-only requirement annotations', async () => {
+      const reporter = await makeReporter();
+      fetchMock.mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const test = createTestCase(['Suite', 'test'], [
+        { type: 'bgstm:requirement', description: '   ' },
+        { type: 'bgstm:requirement', description: '' },
+        { type: 'bgstm:requirement' },
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-001' },
+      ]);
+
+      await reporter.onTestEnd(test, createTestResult());
+
+      const [, req] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(JSON.parse(req.body as string)).toMatchObject({
+        requirement_external_ids: ['REQ-LOGIN-001'],
+      });
+    });
+
+    it('only includes bgstm:requirement annotations in the payload', async () => {
+      const reporter = await makeReporter();
+      fetchMock.mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const test = createTestCase(['Suite', 'test'], [
+        { type: 'issue', description: 'JIRA-123' },
+        { type: 'bgstm:requirement', description: ' REQ-LOGIN-001 ' },
+        { type: 'tag', description: 'smoke' },
+        { type: 'bgstm:requirement', description: 'REQ-LOGIN-002' },
+      ]);
+
+      await reporter.onTestEnd(test, createTestResult());
+
+      const [, req] = fetchMock.mock.calls[0] as [string, RequestInit];
+      expect(JSON.parse(req.body as string)).toMatchObject({
+        requirement_external_ids: ['REQ-LOGIN-001', 'REQ-LOGIN-002'],
+      });
+    });
+
     it('reads sessionId from response.id (regression: was response.session_id)', async () => {
       fetchMock
         .mockResolvedValueOnce(createJsonResponse(createSessionResponse({ id: 'sess-from-id' })))

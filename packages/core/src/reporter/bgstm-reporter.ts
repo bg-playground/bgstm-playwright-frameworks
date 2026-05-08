@@ -131,6 +131,19 @@ export default class BGSTMReporter implements Reporter {
         duration_ms: result.duration,
       };
 
+      const requirementExternalIds = Array.isArray(test.annotations)
+        ? test.annotations
+          .filter((annotation) => annotation.type === 'bgstm:requirement')
+          .map((annotation) => typeof annotation.description === 'string'
+            ? annotation.description.trim()
+            : undefined)
+          .filter((annotation): annotation is string => Boolean(annotation && annotation.length > 0))
+        : [];
+
+      if (requirementExternalIds.length > 0) {
+        payload.requirement_external_ids = requirementExternalIds;
+      }
+
       if (outcome === 'failed') {
         payload.error_message = result.error?.message?.slice(0, 2048);
       }

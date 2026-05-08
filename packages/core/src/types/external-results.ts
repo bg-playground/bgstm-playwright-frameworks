@@ -52,6 +52,8 @@ export interface CaseResultCreate {
   duration_ms: number;
   /** First error line or assertion message (trimmed to ~2 KB). */
   error_message?: string;
+  /** Reporter-supplied external IDs that BGSTM resolves against requirements.external_id. */
+  requirement_external_ids?: string[];
 }
 
 export interface CaseResultResponse {
