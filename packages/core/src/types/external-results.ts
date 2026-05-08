@@ -1,7 +1,7 @@
 // Apache-2.0
 // Mirrors `backend/app/schemas/external_results.py` in bg-playground/BGSTM. Keep in sync.
 
-export type RunStatus = 'queued' | 'in_progress' | 'passed' | 'failed' | 'aborted';
+export type RunStatus = 'started' | 'passed' | 'failed' | 'skipped' | 'aborted';
 
 export interface SessionCreate {
   project_id: string;
@@ -11,8 +11,16 @@ export interface SessionCreate {
 }
 
 export interface SessionResponse {
-  session_id: string;
+  id: string;
   status: RunStatus;
+  started_at: string;
+  finished_at: string | null;
+  runner: string;
+  project_id: string;
+  git_sha: string | null;
+  git_branch: string | null;
+  ci_url: string | null;
+  metadata: Record<string, unknown>;
 }
 
 export interface SessionFinish {

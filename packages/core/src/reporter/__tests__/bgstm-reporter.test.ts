@@ -5,6 +5,7 @@ import { readFile } from 'node:fs/promises';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import BGSTMReporter from '../bgstm-reporter.js';
+import type { SessionResponse } from '../../types/external-results.js';
 
 vi.mock('node:fs/promises');
 
@@ -45,7 +46,21 @@ const createTestResult = (
   } as unknown as TestResult;
 };
 
-const SESSION_RESPONSE = { session_id: 'sess-1', status: 'in_progress' };
+const createSessionResponse = (overrides: Partial<SessionResponse> = {}): SessionResponse => ({
+  id: 'sess-1',
+  status: 'started',
+  started_at: '2024-01-01T00:00:00Z',
+  finished_at: null,
+  runner: '@bgstm/playwright-core@0.1.0',
+  project_id: 'proj-1',
+  git_sha: null,
+  git_branch: null,
+  ci_url: null,
+  metadata: {},
+  ...overrides,
+});
+
+const SESSION_RESPONSE = createSessionResponse();
 const CASE_RESPONSE = {
   id: 'case-result-1',
   session_id: 'sess-1',
@@ -79,7 +94,7 @@ describe('BGSTMReporter', () => {
   });
 
   it('onBegin POSTs to /external-results/session with correct body shape', async () => {
-    fetchMock.mockResolvedValueOnce(createJsonResponse({ session_id: 'sess-1', status: 'in_progress' }));
+    fetchMock.mockResolvedValueOnce(createJsonResponse(SESSION_RESPONSE));
 
     const reporter = new BGSTMReporter({
       apiUrl: 'https://bgstm.example.com',
@@ -111,8 +126,8 @@ describe('BGSTMReporter', () => {
 
   it('uses Authorization header token from options or environment', async () => {
     fetchMock
-      .mockResolvedValueOnce(createJsonResponse({ session_id: 'sess-1', status: 'in_progress' }))
-      .mockResolvedValueOnce(createJsonResponse({ session_id: 'sess-1', status: 'in_progress' }));
+      .mockResolvedValueOnce(createJsonResponse(SESSION_RESPONSE))
+      .mockResolvedValueOnce(createJsonResponse(SESSION_RESPONSE));
 
     process.env.BGSTM_API_TOKEN = 'bgstm_runner_from_env';
 
@@ -142,8 +157,8 @@ describe('BGSTMReporter', () => {
 
   it('onEnd PATCHes session with aggregate status', async () => {
     fetchMock
-      .mockResolvedValueOnce(createJsonResponse({ session_id: 'sess-1', status: 'in_progress' }))
-      .mockResolvedValueOnce(createJsonResponse({ session_id: 'sess-1', status: 'failed' }));
+      .mockResolvedValueOnce(createJsonResponse(SESSION_RESPONSE))
+      .mockResolvedValueOnce(createJsonResponse(createSessionResponse({ status: 'failed' })));
 
     const reporter = new BGSTMReporter({
       apiUrl: 'https://bgstm.example.com',
@@ -216,7 +231,7 @@ describe('BGSTMReporter', () => {
   });
 
   it('uses GITHUB_SHA and GITHUB_REF_NAME when git values are not provided', async () => {
-    fetchMock.mockResolvedValue(createJsonResponse({ session_id: 'sess-1', status: 'in_progress' }));
+    fetchMock.mockResolvedValue(createJsonResponse(SESSION_RESPONSE));
 
     process.env.BGSTM_API_URL = 'https://bgstm.example.com';
     process.env.BGSTM_API_TOKEN = 'bgstm_runner_from_env';
@@ -274,6 +289,26 @@ describe('BGSTMReporter', () => {
         outcome: 'passed',
         duration_ms: 500,
       });
+    });
+
+    it('reads sessionId from response.id (regression: was response.session_id)', async () => {
+      fetchMock
+        .mockResolvedValueOnce(createJsonResponse(createSessionResponse({ id: 'sess-from-id' })))
+        .mockResolvedValueOnce(createJsonResponse(CASE_RESPONSE));
+
+      const reporter = new BGSTMReporter({
+        apiUrl: 'https://bgstm.example.com',
+        apiToken: 'bgstm_runner_abc123',
+        projectId: 'proj-1',
+      });
+      await reporter.onBegin({} as FullConfig, createSuite());
+
+      const test = createTestCase(['Suite', 'id regression']);
+      const result = createTestResult({ status: 'passed', retry: 0, duration: 42 });
+      await reporter.onTestEnd(test, result);
+
+      const [, req] = fetchMock.mock.calls[1] as [string, RequestInit];
+      expect(JSON.parse(req.body as string)).toMatchObject({ session_id: 'sess-from-id' });
     });
 
     it('maps outcome: passed after retry → flaky', async () => {
