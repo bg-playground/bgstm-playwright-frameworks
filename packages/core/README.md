@@ -55,7 +55,15 @@ test(
 );
 ```
 
-You can also push annotations at runtime with `test.info().annotations.push({ type: 'bgstm:requirement', description: 'REQ-LOGIN-001' })`.
+You can also push annotations at runtime:
+
+```ts
+test('login redirects to dashboard', async ({ page }) => {
+  test.info().annotations.push({ type: 'bgstm:requirement', description: 'REQ-LOGIN-001' });
+  await page.goto('/login');
+});
+```
+
 Multiple requirement annotations per test are supported and preserved in declaration order.
 
 BGSTM resolves these values against `requirements.external_id`. Unknown IDs are dropped silently and recorded in

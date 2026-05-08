@@ -137,9 +137,7 @@ export default class BGSTMReporter implements Reporter {
           .map((annotation) => typeof annotation.description === 'string'
             ? annotation.description.trim()
             : undefined)
-          .filter((trimmedDescription): trimmedDescription is string => Boolean(
-            trimmedDescription && trimmedDescription.length > 0,
-          ))
+          .filter((trimmedDescription): trimmedDescription is string => Boolean(trimmedDescription))
         : [];
 
       if (requirementExternalIds.length > 0) {
