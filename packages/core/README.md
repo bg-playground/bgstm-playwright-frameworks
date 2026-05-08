@@ -38,6 +38,38 @@ Environment variables used by the reporter:
 - `BGSTM_API_TOKEN`
 - `BGSTM_PROJECT_ID`
 
+### Linking tests to requirements
+
+Use Playwright annotations to associate a test with one or more BGSTM requirements. The reporter collects
+all `bgstm:requirement` annotations on the test, trims their descriptions, and sends the non-empty values to BGSTM.
+
+```ts
+import { test } from '@playwright/test';
+
+test(
+  'login redirects to dashboard',
+  { annotation: { type: 'bgstm:requirement', description: 'REQ-LOGIN-001' } },
+  async ({ page }) => {
+    await page.goto('/login');
+  },
+);
+```
+
+You can also push annotations at runtime:
+
+```ts
+test('login redirects to dashboard', async ({ page }) => {
+  test.info().annotations.push({ type: 'bgstm:requirement', description: 'REQ-LOGIN-001' });
+  await page.goto('/login');
+});
+```
+
+Multiple requirement annotations per test are supported and preserved in declaration order.
+
+BGSTM resolves these values against `requirements.external_id`. Unknown IDs are dropped silently and recorded in
+the BGSTM audit log, so create the requirement in BGSTM first (for example via `POST /api/v1/requirements`) if you
+need guaranteed linking. `auto_register_requirements` remains a server-side opt-in; this reporter does not send it.
+
 ### Base Fixtures
 
 ```ts

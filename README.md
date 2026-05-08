@@ -56,6 +56,28 @@ test('create a lead and convert to opportunity', async ({ leadsPage, opportuniti
 });
 ```
 
+## Linking tests to requirements
+
+The BGSTM reporter reads Playwright `bgstm:requirement` annotations from each completed test and forwards them to
+BGSTM as requirement external IDs.
+
+```ts
+import { test } from '@playwright/test';
+
+test(
+  'login redirects to dashboard',
+  { annotation: { type: 'bgstm:requirement', description: 'REQ-LOGIN-001' } },
+  async ({ page }) => {
+    await page.goto('/login');
+  },
+);
+```
+
+You can also add them dynamically with `test.info().annotations.push({ type: 'bgstm:requirement', description: 'REQ-LOGIN-001' })`.
+Multiple requirement annotations per test are supported. BGSTM resolves them against `requirements.external_id`;
+unknown IDs are dropped silently and recorded in the audit log, so create the requirement in BGSTM first for
+guaranteed linking. `auto_register_requirements` is server-side opt-in only; this reporter does not send it.
+
 ## How it relates to BGSTM and NAT
 
 ```
