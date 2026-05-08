@@ -7,6 +7,7 @@ import type {
   CaseResultResponse,
   SessionCreate,
   SessionFinish,
+  SessionResponse,
 } from '../types/external-results.js';
 
 export interface BGSTMClientOptions {
@@ -23,7 +24,7 @@ export class BGSTMClient {
     this.apiToken = options.apiToken;
   }
 
-  async createSession(payload: SessionCreate): Promise<{ session_id: string; status: string }> {
+  async createSession(payload: SessionCreate): Promise<SessionResponse> {
     return this.request('/api/v1/external-results/session', {
       method: 'POST',
       body: payload,
@@ -33,7 +34,7 @@ export class BGSTMClient {
   async finishSession(
     sessionId: string,
     payload: SessionFinish,
-  ): Promise<{ session_id: string; status: string }> {
+  ): Promise<SessionResponse> {
     return this.request(`/api/v1/external-results/session/${sessionId}`, {
       method: 'PATCH',
       body: payload,

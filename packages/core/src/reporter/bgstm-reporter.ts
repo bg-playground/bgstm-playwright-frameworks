@@ -111,7 +111,7 @@ export default class BGSTMReporter implements Reporter {
 
     await this.runSafely(async () => {
       const response = await this.client!.createSession(payload);
-      this.sessionId = response.session_id;
+      this.sessionId = response.id;
     });
   }
 
