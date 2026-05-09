@@ -35,7 +35,7 @@ describe('LedgerPage', () => {
     expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/ledgers');
   });
 
-  it('navigate() calls goto and waitForLoadState(networkidle)', async () => {
+  it('navigate() calls goto and waitForLoadState(network idle)', async () => {
     const page = createMockPage();
     const ledgerPage = new LedgerPage(page);
 
