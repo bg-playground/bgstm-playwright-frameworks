@@ -35,7 +35,7 @@ describe('JournalPage', () => {
     expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/journals');
   });
 
-  it('navigate() calls goto and waitForLoadState(network idle)', async () => {
+  it('navigate() calls goto and waitForLoadState(networkidle)', async () => {
     const page = createMockPage();
     const journalPage = new JournalPage(page);
 
