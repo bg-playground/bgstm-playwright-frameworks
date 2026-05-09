@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "description": "Standalone runnable Playwright project using @bgstm/domain-accounting",
   "scripts": {
-    "test": "playwright test"
+    "test": "echo \"(structural smoke fixture — run via 'pnpm smoke' or step-2 CI; skipped from 'pnpm -r run test' on purpose)\"",
+    "smoke": "playwright test"
   },
   "dependencies": {
     "@bgstm/playwright-core": "workspace:*",
