@@ -1,17 +1,41 @@
 # @bgstm/domain-accounting
 
-> Accounting domain pack for Playwright — pre-built page objects, factories, and flows for Ledger, Journal, and Reconciliation entities.
+> Accounting domain pack for Playwright with reusable page objects and fixtures for ledger and journal workflows.
 
-[![Status: Planned](https://img.shields.io/badge/status-planned-lightgrey.svg)](#)
+[![Status: Active](https://img.shields.io/badge/status-active-brightgreen.svg)](#)
 
-## Planned entities
+Implemented in [#5](https://github.com/bg-playground/bgstm-playwright-frameworks/issues/5)
 
-- **Ledgers** — `LedgerPage`, `LedgerFactory`
-- **Journals** — `JournalPage`, `JournalFactory`
-- **Reconciliations** — `ReconciliationPage`
+See [examples/accounting-example](../../examples/accounting-example) for a runnable Playwright project using this package.
 
-This package is planned. See [CONTRIBUTING.md](../../CONTRIBUTING.md) if you want to help implement it.
+## Usage
+
+```ts
+import { base as core } from '@bgstm/playwright-core';
+import { test as accountingTest, expect } from '@bgstm/domain-accounting';
+
+// core (base) -> accounting (domain) -> spec
+const test = accountingTest.extend<{
+  tenantId: string;
+}>({
+  tenantId: async ({}, use) => {
+    await use('tenant-local');
+  },
+});
+
+test('ledger page is available', async ({ ledgerPage }) => {
+  expect(ledgerPage).toBeDefined();
+});
+```
+
+## Entities
+
+| Entity | Page Object | Status |
+| --- | --- | --- |
+| Ledger | `LedgerPage` | Active |
+| Journal | `JournalPage` | Active |
+| Reconciliation | `ReconciliationPage` | Stub (`navigate()` only in v0.1) |
 
 ## License
 
-Apache-2.0
+Licensed under the Apache License, Version 2.0.
