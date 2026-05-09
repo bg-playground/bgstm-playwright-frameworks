@@ -56,4 +56,10 @@ describe('LedgerPage', () => {
 
     await expect(ledgerPage.openEntry('ledger-1')).rejects.toThrow('Not yet implemented');
   });
+
+  it('getEntryCount() is callable and currently not implemented', async () => {
+    const ledgerPage = new LedgerPage(createMockPage());
+
+    await expect(ledgerPage.getEntryCount()).rejects.toThrow('Not yet implemented');
+  });
 });

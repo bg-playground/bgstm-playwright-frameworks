@@ -18,11 +18,22 @@ import { test } from '../src/fixtures/index.js';
 
 describe('accounting fixture composition', () => {
   it('test object has ledgerPage fixture', () => {
-    expect(typeof test.extend).toBe('function');
+    const extended = test.extend<{ ledgerFixtureIsWired: boolean }>({
+      ledgerFixtureIsWired: async ({ ledgerPage }, use) => {
+        await use(Boolean(ledgerPage));
+      },
+    });
+
+    expect(extended).toBeDefined();
   });
 
   it('test object has journalPage fixture', () => {
-    const extended = test.extend({});
+    const extended = test.extend<{ journalFixtureIsWired: boolean }>({
+      journalFixtureIsWired: async ({ journalPage }, use) => {
+        await use(Boolean(journalPage));
+      },
+    });
+
     expect(extended).toBeDefined();
   });
 });
