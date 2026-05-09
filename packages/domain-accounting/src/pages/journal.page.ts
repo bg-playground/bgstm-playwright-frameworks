@@ -1,5 +1,27 @@
+// Copyright 2024 bg-playground
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 import { BasePage } from '@bgstm/playwright-core';
 import type { Page } from '@playwright/test';
+
+export interface JournalEntry {
+  id: string;
+  description: string;
+  debit: number;
+  credit: number;
+  postedAt?: string;
+}
 
 export class JournalPage extends BasePage {
   constructor(page: Page) {
@@ -9,5 +31,17 @@ export class JournalPage extends BasePage {
   async navigate(): Promise<void> {
     await this.page.goto('/journals');
     await this.waitForLoad();
+  }
+
+  async create(_data: Omit<JournalEntry, 'id' | 'postedAt'>): Promise<JournalEntry> {
+    throw new Error('Not yet implemented');
+  }
+
+  async edit(_id: string, _data: Partial<Omit<JournalEntry, 'id'>>): Promise<void> {
+    throw new Error('Not yet implemented');
+  }
+
+  async post(_id: string): Promise<void> {
+    throw new Error('Not yet implemented');
   }
 }

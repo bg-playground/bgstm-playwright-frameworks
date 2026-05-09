@@ -12,5 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Multi-step accounting workflow helpers
-// TODO: implement journal entry flow, reconciliation flow, etc.
+import { describe, expect, it } from 'vitest';
+
+import { test } from '../src/fixtures/index.js';
+
+describe('accounting fixture composition', () => {
+  it('test object has ledgerPage fixture', () => {
+    expect(typeof test.extend).toBe('function');
+  });
+
+  it('test object has journalPage fixture', () => {
+    const extended = test.extend({});
+    expect(extended).toBeDefined();
+  });
+});

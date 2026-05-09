@@ -15,7 +15,7 @@
 import type { Page } from '@playwright/test';
 import { describe, expect, it, vi } from 'vitest';
 
-import { LedgerPage } from '../src/pages/ledger.page.js';
+import { JournalPage } from '../src/pages/journal.page.js';
 
 const createMockPage = (): Page => {
   return {
@@ -24,36 +24,39 @@ const createMockPage = (): Page => {
   } as unknown as Page;
 };
 
-describe('LedgerPage', () => {
+describe('JournalPage', () => {
   it('is instantiatable and can use the provided page through navigate()', async () => {
     const page = createMockPage();
-    const ledgerPage = new LedgerPage(page);
+    const journalPage = new JournalPage(page);
 
-    await ledgerPage.navigate();
+    await journalPage.navigate();
 
-    expect(ledgerPage).toBeInstanceOf(LedgerPage);
-    expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/ledgers');
+    expect(journalPage).toBeInstanceOf(JournalPage);
+    expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/journals');
   });
 
   it('navigate() calls goto and waitForLoadState(networkidle)', async () => {
     const page = createMockPage();
-    const ledgerPage = new LedgerPage(page);
+    const journalPage = new JournalPage(page);
 
-    await ledgerPage.navigate();
+    await journalPage.navigate();
 
-    expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/ledgers');
+    expect(vi.mocked(page.goto)).toHaveBeenCalledWith('/journals');
     expect(vi.mocked(page.waitForLoadState)).toHaveBeenCalledWith('networkidle');
   });
 
-  it('filter() currently documents not-yet-implemented behavior', async () => {
-    const ledgerPage = new LedgerPage(createMockPage());
+  it('create() is callable and currently not implemented', async () => {
+    const journalPage = new JournalPage(createMockPage());
 
-    await expect(ledgerPage.filter({ id: 'ledger-1' })).rejects.toThrow('Not yet implemented');
+    await expect(journalPage.create({ description: 'entry', debit: 100, credit: 100 })).rejects.toThrow(
+      'Not yet implemented',
+    );
   });
 
-  it('openEntry() is callable and currently not implemented', async () => {
-    const ledgerPage = new LedgerPage(createMockPage());
+  it('edit() and post() are callable and currently not implemented', async () => {
+    const journalPage = new JournalPage(createMockPage());
 
-    await expect(ledgerPage.openEntry('ledger-1')).rejects.toThrow('Not yet implemented');
+    await expect(journalPage.edit('journal-1', { description: 'updated' })).rejects.toThrow('Not yet implemented');
+    await expect(journalPage.post('journal-1')).rejects.toThrow('Not yet implemented');
   });
 });
