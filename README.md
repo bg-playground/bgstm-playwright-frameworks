@@ -78,7 +78,7 @@ Multiple requirement annotations per test are supported. BGSTM resolves them aga
 unknown IDs are dropped silently and recorded in the audit log, so create the requirement in BGSTM first for
 guaranteed linking. `auto_register_requirements` is server-side opt-in only; this reporter does not send it.
 
-## How it relates to BGSTM and NAT
+## How it relates to BGSTM and NAT (http://NAT-Testing.io)
 
 ```
 BGSTM            ← methodology + traceability platform (open-source)
