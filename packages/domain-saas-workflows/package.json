@@ -1,12 +1,19 @@
 {
   "name": "@bgstm/domain-saas-workflows",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": true,
   "description": "AI workforce and multi-channel SaaS workflow automation pack for Playwright",
   "license": "Apache-2.0",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "keywords": ["playwright", "bgstm", "ai-receptionist", "scheduling", "crm", "saas-workflows"],
+  "keywords": [
+    "playwright",
+    "bgstm",
+    "ai-receptionist",
+    "scheduling",
+    "crm",
+    "saas-workflows"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
