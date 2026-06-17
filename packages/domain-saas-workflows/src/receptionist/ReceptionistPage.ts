@@ -1,6 +1,9 @@
 import type { InboundCall, Intent } from '../types.js';
+import type { Page } from '@playwright/test';
 
 export class ReceptionistPage {
+  constructor(_page: Page) {}
+
   /**
    * Simulates an inbound call entering the AI receptionist flow.
    */

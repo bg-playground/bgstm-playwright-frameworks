@@ -1,6 +1,9 @@
 import type { Appointment, AvailabilitySlot, Contact } from '../types.js';
+import type { Page } from '@playwright/test';
 
 export class SchedulingPage {
+  constructor(_page: Page) {}
+
   /**
    * Opens availability for a specific date in the scheduler.
    */

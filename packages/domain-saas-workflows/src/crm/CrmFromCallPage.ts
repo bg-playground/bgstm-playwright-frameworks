@@ -1,6 +1,9 @@
 import type { Lead, LifecycleStage } from '../types.js';
+import type { Page } from '@playwright/test';
 
 export class CrmFromCallPage {
+  constructor(_page: Page) {}
+
   /**
    * Creates a lead from a call transcript reference.
    */
