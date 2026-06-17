@@ -21,6 +21,7 @@ Most Playwright starters are generic. These aren't. Each domain pack ships with:
 | [`@bgstm/playwright-core`](./packages/core) | Shared fixtures, base POM, BGSTM reporter | 🚧 Stub |
 | [`@bgstm/domain-crm`](./packages/domain-crm) | CRM domain pack (Leads, Opportunities, Accounts) | 🚧 Stub |
 | [`@bgstm/domain-accounting`](./packages/domain-accounting) | Accounting domain pack (Ledgers, Journals, Reconciliations) | 🚧 Stub |
+| [`@bgstm/domain-saas-workflows`](./packages/domain-saas-workflows) | AI workforce / SaaS workflows pack (AI receptionist, scheduling, CRM-from-call) | 🚧 Stub |
 
 > 💼 **Looking for regulated-industry packs** (Healthcare/HIPAA, Financial/SOX, GxP)? Those are available as part of [NAT](https://nat-testing.io) — the managed test execution platform built around BGSTM.
 
