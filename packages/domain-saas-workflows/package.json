@@ -1,0 +1,35 @@
+{
+  "name": "@bgstm/domain-saas-workflows",
+  "version": "0.0.1",
+  "private": true,
+  "description": "AI workforce and multi-channel SaaS workflow automation pack for Playwright",
+  "license": "Apache-2.0",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "echo \"(no tests yet — see package examples for usage patterns)\"",
+    "test:e2e": "playwright test --project=e2e",
+    "lint": "eslint src --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@bgstm/playwright-core": "workspace:*"
+  },
+  "peerDependencies": {
+    "@playwright/test": ">=1.48.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.48.0",
+    "@types/node": "^20.0.0",
+    "typescript": "^5.5.0"
+  },
+  "keywords": [
+    "playwright",
+    "bgstm",
+    "ai-receptionist",
+    "scheduling",
+    "crm",
+    "saas-workflows"
+  ]
+}
